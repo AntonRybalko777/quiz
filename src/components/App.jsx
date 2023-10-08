@@ -3,6 +3,7 @@ import { QuizList } from './QuizList/QuizList';
 import initialQuizItems from '../data.json';
 import { SearchBar } from './SearchBar/SearchBar';
 import { QuizForm } from './QuizForm/QuizForm';
+import { nanoid } from 'nanoid';
 
 export class App extends Component {
   state = {
@@ -11,6 +12,12 @@ export class App extends Component {
       topic: '',
       level: 'all',
     },
+  };
+
+  addQuiz = newQuiz => {
+    this.setState(prevState => ({
+      quizItems: [...prevState.quizItems, { ...newQuiz, id: nanoid() }],
+    }));
   };
 
   changeFilter = (key, value) => {
@@ -46,7 +53,7 @@ export class App extends Component {
     const filteredItems = this.getFilteredItems();
     return (
       <div>
-        <QuizForm />
+        <QuizForm onAdd={this.addQuiz} />
         <SearchBar filters={filters} onChangeFilter={this.changeFilter} />
         <QuizList items={filteredItems} onDelete={this.deleteQuizCard} />
       </div>
