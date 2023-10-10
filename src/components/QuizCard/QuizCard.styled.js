@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 function getColorBorder(props) {
-  switch (props.level) {
+  switch (props.$level) {
     case 'beginner':
       return 'green';
     case 'intermediate':
