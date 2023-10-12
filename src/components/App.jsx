@@ -2,9 +2,10 @@ import { Component } from 'react';
 import { QuizList } from './QuizList/QuizList';
 import { SearchBar } from './SearchBar/SearchBar';
 import { QuizForm } from './QuizForm/QuizForm';
-// import { nanoid } from 'nanoid';
 import { fetchQuiz, createQuiz, deleteQuiz } from 'api';
 import toast, { Toaster } from 'react-hot-toast';
+import { ErrMessage } from './ErrMessage';
+import { ProgressBar } from 'react-loader-spinner';
 
 export class App extends Component {
   state = {
@@ -98,6 +99,9 @@ export class App extends Component {
           item => item.id !== deleteQuizz.id
         ),
       }));
+      toast('Quiz deleted!', {
+        icon: '👏',
+      });
     } catch (error) {
       this.setState({ error: true });
     } finally {
@@ -116,8 +120,24 @@ export class App extends Component {
           onChangeFilter={this.changeFilter}
           onReset={this.resetFilters}
         />
-        {error && <p>Whoops! Something went wrong... Please reload the page</p>}
-        {loading && <p>Loading...</p>}
+
+        {error && (
+          <ErrMessage>
+            Whoops! Something went wrong... Please reload the page
+          </ErrMessage>
+        )}
+
+        {loading && (
+          <ProgressBar
+            height="80"
+            width="80"
+            ariaLabel="progress-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass="progress-bar-wrapper"
+            borderColor="#F4442E"
+            barColor="#51E5FF"
+          />
+        )}
         {filteredItems.length > 0 && (
           <QuizList items={filteredItems} onDelete={this.deleteQuizCard} />
         )}
