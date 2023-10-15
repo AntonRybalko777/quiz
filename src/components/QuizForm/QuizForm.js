@@ -1,12 +1,18 @@
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { StyledForm, ErrMsg } from './QuizForm.styled';
+import {
+  StyledForm,
+  ErrMsg,
+  Label,
+  StyledField,
+  Button,
+} from './QuizForm.styled';
 
 const quizSchema = Yup.object().shape({
-  topic: Yup.string().min(3, 'Too short').required('Required'),
+  topic: Yup.string().min(2, 'Too short').required('Required'),
   time: Yup.number()
-    .min(10, 'Min 10 min')
-    .max(45, 'Max 45 min')
+    .min(10, 'Min 10 minutes')
+    .max(45, 'Max 45 minutes')
     .required('Required'),
   questions: Yup.number().min(3, 'Min 3 questions').required('Required'),
   level: Yup.string()
@@ -18,9 +24,9 @@ export const QuizForm = ({ onAdd }) => {
     <Formik
       initialValues={{
         topic: '',
-        time: 0,
-        questions: 0,
-        level: 'beginner',
+        time: 10,
+        questions: 3,
+        level: 'intermediate',
       }}
       validationSchema={quizSchema}
       onSubmit={(values, actions) => {
@@ -29,30 +35,32 @@ export const QuizForm = ({ onAdd }) => {
       }}
     >
       <StyledForm>
-        <label>
+        <Label>
           Topic
-          <Field name="topic" placeholder="Topic field" />
+          <StyledField name="topic" />
           <ErrMsg name="topic" component="div" />
-        </label>
+        </Label>
 
-        <label>
-          Time <Field type="number" name="time" />
+        <Label>
+          Time (min)
+          <StyledField type="number" name="time" />
           <ErrMsg name="time" component="div" />
-        </label>
-        <label>
-          Questions <Field type="number" name="questions" />
+        </Label>
+        <Label>
+          Questions
+          <StyledField type="number" name="questions" />
           <ErrMsg name="questions" component="div" />
-        </label>
-        <label>
+        </Label>
+        <Label>
           Level
-          <Field as="select" name="level">
+          <StyledField as="select" name="level">
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
-          </Field>
+          </StyledField>
           <ErrMsg name="level" component="div" />
-        </label>
-        <button type="submit">Add quiz</button>
+        </Label>
+        <Button type="submit">Add quiz</Button>
       </StyledForm>
     </Formik>
   );

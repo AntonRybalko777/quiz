@@ -30,7 +30,6 @@ export class App extends Component {
       this.setState({ loading: true, error: false });
       const quizzes = await fetchQuiz();
       this.setState({ quizItems: quizzes });
-      toast.success('Here are your quizzes!');
     } catch (error) {
       this.setState({ error: true });
     } finally {
