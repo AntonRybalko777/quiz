@@ -10,6 +10,7 @@ export const StyledForm = styled(Form)`
   border-radius: 5px;
   box-shadow: 3px 6px 3px -2px rgba(0, 0, 0, 0.28);
   gap: ${props => props.theme.spacing(5)};
+  margin-bottom: 20px;
 `;
 
 export const Label = styled.label`

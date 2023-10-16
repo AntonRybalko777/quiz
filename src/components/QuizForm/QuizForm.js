@@ -24,9 +24,9 @@ export const QuizForm = ({ onAdd }) => {
     <Formik
       initialValues={{
         topic: '',
-        time: 10,
-        questions: 3,
-        level: 'intermediate',
+        time: 0,
+        questions: 0,
+        level: 'beginner',
       }}
       validationSchema={quizSchema}
       onSubmit={(values, actions) => {
