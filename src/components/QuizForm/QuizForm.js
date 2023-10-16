@@ -51,7 +51,6 @@ export const QuizForm = ({ onAdd }) => {
           <StyledField type="number" name="questions" />
           <ErrMsg name="questions" component="div" />
         </Label>
-
         <Label>
           Level
           <StyledField as="select" name="level">

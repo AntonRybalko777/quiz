@@ -1,6 +1,7 @@
 import { Component } from 'react';
-import { InfoWrapper, Container } from './QuizCard.styled';
+import { InfoWrapper, Card, Buttons } from './QuizCard.styled';
 import Modal from 'react-modal';
+import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 
 const customStyles = {
   content: {
@@ -34,16 +35,21 @@ export class QuizCard extends Component {
       onDelete,
     } = this.props;
     return (
-      <Container $level={level}>
+      <Card $level={level}>
         <h2>{topic}</h2>
         <InfoWrapper>
           <p>Level: {level}</p>
           <p>Time: {time} min</p>
           <p>Questions: {questions}</p>
         </InfoWrapper>
-        <button onClick={() => onDelete(id)}>Delete</button>
-        <button onClick={this.openModal}>Open Modal</button>
-
+        <Buttons>
+          <button onClick={() => onDelete(id)}>
+            <AiOutlineDelete />
+          </button>
+          <button onClick={this.openModal}>
+            <AiOutlineEye />
+          </button>
+        </Buttons>
         <Modal
           isOpen={isModalOpen}
           onRequestClose={this.closeModal}
@@ -53,7 +59,7 @@ export class QuizCard extends Component {
           <p>{topic} Card</p>
           <button onClick={this.closeModal}>Close</button>
         </Modal>
-      </Container>
+      </Card>
     );
   }
 }
