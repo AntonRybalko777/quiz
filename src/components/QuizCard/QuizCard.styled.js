@@ -16,6 +16,16 @@ function getColorBorder(props) {
 export const InfoWrapper = styled.div`
   display: flex;
   gap: 8px;
+  justify-content: space-around;
+  align-items: center;
+
+  p {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
 `;
 
 export const Card = styled.div`
@@ -59,4 +69,14 @@ export const Buttons = styled.div`
       }
     }
   }
+`;
+
+export const InfoTitle = styled.span`
+  color: #8a8a8a;
+  font-size: 13px;
+`;
+
+export const InfoValue = styled.span`
+  font-weight: bold;
+  text-transform: uppercase;
 `;

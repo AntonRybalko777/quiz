@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import {
   StyledForm,
@@ -24,8 +24,8 @@ export const QuizForm = ({ onAdd }) => {
     <Formik
       initialValues={{
         topic: '',
-        time: 0,
-        questions: 0,
+        time: 10,
+        questions: 3,
         level: 'beginner',
       }}
       validationSchema={quizSchema}
@@ -53,11 +53,11 @@ export const QuizForm = ({ onAdd }) => {
         </Label>
         <Label>
           Level
-          <StyledField as="select" name="level">
+          <Field as="select" name="level">
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="advanced">Advanced</option>
-          </StyledField>
+          </Field>
           <ErrMsg name="level" component="div" />
         </Label>
 

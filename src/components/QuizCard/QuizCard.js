@@ -1,5 +1,11 @@
 import { Component } from 'react';
-import { InfoWrapper, Card, Buttons } from './QuizCard.styled';
+import {
+  InfoWrapper,
+  Card,
+  Buttons,
+  InfoTitle,
+  InfoValue,
+} from './QuizCard.styled';
 import Modal from 'react-modal';
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
 
@@ -38,9 +44,17 @@ export class QuizCard extends Component {
       <Card $level={level}>
         <h2>{topic}</h2>
         <InfoWrapper>
-          <p>Level: {level}</p>
-          <p>Time: {time} min</p>
-          <p>Questions: {questions}</p>
+          <p>
+            <InfoTitle>Level</InfoTitle>
+            <InfoValue> {level}</InfoValue>
+          </p>
+          <p>
+            <InfoTitle>Time</InfoTitle>
+            <InfoValue>{time} min</InfoValue>
+          </p>
+          <p>
+            <InfoTitle>Questions</InfoTitle> <InfoValue>{questions}</InfoValue>
+          </p>
         </InfoWrapper>
         <Buttons>
           <button onClick={() => onDelete(id)}>
