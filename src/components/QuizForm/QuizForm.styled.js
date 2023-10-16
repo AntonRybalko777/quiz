@@ -28,6 +28,7 @@ export const ErrMsg = styled(ErrorMessage)`
 export const StyledField = styled(Field)`
   border-radius: 5px;
   border: 1px solid grey;
+  padding: 5px;
 
   &[name='questions'],
   &[name='time'] {

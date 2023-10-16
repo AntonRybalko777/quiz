@@ -51,6 +51,7 @@ export const QuizForm = ({ onAdd }) => {
           <StyledField type="number" name="questions" />
           <ErrMsg name="questions" component="div" />
         </Label>
+
         <Label>
           Level
           <StyledField as="select" name="level">
@@ -60,6 +61,7 @@ export const QuizForm = ({ onAdd }) => {
           </StyledField>
           <ErrMsg name="level" component="div" />
         </Label>
+
         <Button type="submit">Add quiz</Button>
       </StyledForm>
     </Formik>
