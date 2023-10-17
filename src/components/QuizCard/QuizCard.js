@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import {
   InfoWrapper,
   Card,
@@ -21,59 +21,53 @@ const customStyles = {
 };
 Modal.setAppElement('#root');
 
-export class QuizCard extends Component {
-  state = {
-    isModalOpen: false,
+export const QuizCard = ({
+  quiz: { id, topic, level, time, questions },
+  onDelete,
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
   };
 
-  openModal = () => {
-    this.setState({ isModalOpen: true });
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
-  closeModal = () => {
-    this.setState({ isModalOpen: false });
-  };
-
-  render() {
-    const { isModalOpen } = this.state;
-    const {
-      quiz: { id, topic, level, time, questions },
-      onDelete,
-    } = this.props;
-    return (
-      <Card $level={level}>
-        <h2>{topic}</h2>
-        <InfoWrapper>
-          <p>
-            <InfoTitle>Level</InfoTitle>
-            <InfoValue> {level}</InfoValue>
-          </p>
-          <p>
-            <InfoTitle>Time</InfoTitle>
-            <InfoValue>{time} min</InfoValue>
-          </p>
-          <p>
-            <InfoTitle>Questions</InfoTitle> <InfoValue>{questions}</InfoValue>
-          </p>
-        </InfoWrapper>
-        <Buttons>
-          <button onClick={() => onDelete(id)}>
-            <AiOutlineDelete />
-          </button>
-          <button onClick={this.openModal}>
-            <AiOutlineEye />
-          </button>
-        </Buttons>
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={this.closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <p>{topic} Card</p>
-          <button onClick={this.closeModal}>Close</button>
-        </Modal>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card $level={level}>
+      <h2>{topic}</h2>
+      <InfoWrapper>
+        <p>
+          <InfoTitle>Level</InfoTitle>
+          <InfoValue> {level}</InfoValue>
+        </p>
+        <p>
+          <InfoTitle>Time</InfoTitle>
+          <InfoValue>{time} min</InfoValue>
+        </p>
+        <p>
+          <InfoTitle>Questions</InfoTitle> <InfoValue>{questions}</InfoValue>
+        </p>
+      </InfoWrapper>
+      <Buttons>
+        <button onClick={() => onDelete(id)}>
+          <AiOutlineDelete />
+        </button>
+        <button onClick={openModal}>
+          <AiOutlineEye />
+        </button>
+      </Buttons>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <p>{topic} Card</p>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
+    </Card>
+  );
+};

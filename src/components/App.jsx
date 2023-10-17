@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { QuizList } from './QuizList/QuizList';
 import { SearchBar } from './SearchBar/SearchBar';
 import { QuizForm } from './QuizForm/QuizForm';
@@ -7,141 +7,128 @@ import toast, { Toaster } from 'react-hot-toast';
 import { ErrMessage } from './ErrMessage';
 import { ProgressBar } from 'react-loader-spinner';
 
-export class App extends Component {
-  state = {
-    quizItems: [],
-    loading: false,
-    error: false,
-    filters: {
-      topic: '',
-      level: 'all',
-    },
+function getInitialFilters() {
+  const savedFilters = localStorage.getItem('quiz-filters');
+  if (savedFilters !== null) {
+    return JSON.parse(savedFilters);
+  }
+  return {
+    topic: '',
+    level: 'all',
   };
+}
 
-  async componentDidMount() {
-    const savedFilters = localStorage.getItem('quiz-filters');
-    if (savedFilters !== null) {
-      this.setState({
-        filters: JSON.parse(savedFilters),
-      });
-    }
+export const App = () => {
+  const [quizItems, setQuizItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [filters, setFilters] = useState(getInitialFilters);
 
+  useEffect(
+    () => localStorage.setItem('quiz-filters', JSON.stringify(filters)),
+    [filters]
+  );
+
+  const addQuiz = async newQuiz => {
     try {
-      this.setState({ loading: true, error: false });
-      const quizzes = await fetchQuiz();
-      this.setState({ quizItems: quizzes });
-    } catch (error) {
-      this.setState({ error: true });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (
-      prevState.filters.topic !== this.state.filters.topic ||
-      prevState.filters.level !== this.state.filters.level
-    ) {
-      localStorage.setItem('quiz-filters', JSON.stringify(this.state.filters));
-    }
-  }
-
-  addQuiz = async newQuiz => {
-    try {
-      this.setState({ loading: true, error: false });
+      setLoading(true);
+      setError(false);
       const quiz = await createQuiz(newQuiz);
-
-      this.setState(prevState => ({
-        quizItems: [...prevState.quizItems, quiz],
-      }));
+      setQuizItems(prevState => [...prevState, quiz]);
     } catch (error) {
-      this.setState({ error: true });
+      setError(true);
     } finally {
-      this.setState({ loading: false });
+      setLoading(false);
     }
   };
 
-  changeFilter = (key, value) => {
-    this.setState(prevState => ({
-      filters: {
-        ...prevState.filters,
-        [key]: value,
-      },
-    }));
-  };
-
-  resetFilters = () => {
-    this.setState({
-      filters: { topic: '', level: 'all' },
-    });
-  };
-
-  getFilteredItems = () => {
-    const { quizItems, filters } = this.state;
-    return quizItems.filter(item => {
-      const topicFilter = item.topic
-        .toLowerCase()
-        .includes(filters.topic.toLowerCase());
-      if (filters.level === 'all') {
-        return topicFilter;
-      }
-      return item.level === filters.level && topicFilter;
-    });
-  };
-
-  deleteQuizCard = async quizId => {
+  const deleteQuizCard = async quizId => {
     try {
-      this.setState({ loading: true, error: false });
+      setLoading(true);
+      setError(false);
       const deleteQuizz = await deleteQuiz(quizId);
-      this.setState(prevState => ({
-        quizItems: prevState.quizItems.filter(
-          item => item.id !== deleteQuizz.id
-        ),
+      setQuizItems(prevState => ({
+        quizItems: prevState.filter(item => item.id !== deleteQuizz.id),
       }));
-      toast('Quiz deleted!', {
+      toast(`Quiz id#${quizId} deleted!`, {
         icon: '👏',
       });
     } catch (error) {
-      this.setState({ error: true });
+      setError(true);
     } finally {
-      this.setState({ loading: false });
+      setLoading(false);
     }
   };
 
-  render() {
-    const { filters, loading, error } = this.state;
-    const filteredItems = this.getFilteredItems();
-    return (
-      <div>
-        <QuizForm onAdd={this.addQuiz} />
-        <SearchBar
-          filters={filters}
-          onChangeFilter={this.changeFilter}
-          onReset={this.resetFilters}
+  const changeFilter = (key, value) => {
+    setFilters(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({ topic: '', level: 'all' });
+  };
+
+  const filteredItems = quizItems.filter(quiz => {
+    const topicFilter = filters.topic.toLowerCase();
+    const hasTopic = quiz.topic.toLowerCase().includes(topicFilter);
+
+    if (filters.level === 'all') {
+      return hasTopic;
+    }
+
+    return hasTopic && quiz.level === filters.level;
+  });
+
+  useEffect(() => {
+    async function getQuizzes() {
+      try {
+        setLoading(true);
+        setError(false);
+        const quizzes = await fetchQuiz();
+        setQuizItems(quizzes);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getQuizzes();
+  }, []);
+
+  return (
+    <div>
+      <QuizForm onAdd={addQuiz} />
+      <SearchBar
+        filters={filters}
+        onChangeFilter={changeFilter}
+        onReset={resetFilters}
+      />
+
+      {error && (
+        <ErrMessage>
+          Whoops! Something went wrong... Please reload the page
+        </ErrMessage>
+      )}
+
+      {loading && (
+        <ProgressBar
+          height="80"
+          width="80"
+          ariaLabel="progress-bar-loading"
+          wrapperStyle={{}}
+          wrapperClass="progress-bar-wrapper"
+          borderColor="#F4442E"
+          barColor="#51E5FF"
         />
-
-        {error && (
-          <ErrMessage>
-            Whoops! Something went wrong... Please reload the page
-          </ErrMessage>
-        )}
-
-        {loading && (
-          <ProgressBar
-            height="80"
-            width="80"
-            ariaLabel="progress-bar-loading"
-            wrapperStyle={{}}
-            wrapperClass="progress-bar-wrapper"
-            borderColor="#F4442E"
-            barColor="#51E5FF"
-          />
-        )}
-        {filteredItems.length > 0 && (
-          <QuizList items={filteredItems} onDelete={this.deleteQuizCard} />
-        )}
-        <Toaster />
-      </div>
-    );
-  }
-}
+      )}
+      {filteredItems.length > 0 && (
+        <QuizList items={filteredItems} onDelete={deleteQuizCard} />
+      )}
+      <Toaster />
+    </div>
+  );
+};
