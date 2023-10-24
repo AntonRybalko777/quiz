@@ -8,6 +8,7 @@ import {
 } from './QuizCard.styled';
 import Modal from 'react-modal';
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 const customStyles = {
   content: {
@@ -37,7 +38,9 @@ export const QuizCard = ({
 
   return (
     <Card $level={level}>
-      <h2>{topic}</h2>
+      <Link to={`/quizzes/${id}`}>
+        <h2>{topic}</h2>
+      </Link>
       <InfoWrapper>
         <p>
           <InfoTitle>Level</InfoTitle>
