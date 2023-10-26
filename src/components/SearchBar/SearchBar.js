@@ -1,26 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
 import { Container } from './SearchBar.styled';
 
-export const SearchBar = (
-  {
-    // filters: { level, topic },
-    // onChangeFilter,
-    // onReset,
-  }
-) => {
+export const SearchBar = () => {
   const [params, setParams] = useSearchParams();
   const topic = params.get('topic') ?? '';
   const level = params.get('level') ?? 'all';
-
-  // const changeTopic = evt => {
-  //   params.set('topic', evt.target.value);
-  //   setParams(params);
-  // };
-
-  // const changeLevel = evt => {
-  //   params.set('level', evt.target.value);
-  //   setParams(params);
-  // };
 
   const changeFilters = (topic, value) => {
     params.set(topic, value);
