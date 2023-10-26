@@ -1,10 +1,12 @@
 import { fetchQuizById } from 'api';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 export default function QuizDetails() {
   const params = useParams();
   const [quiz, setQuiz] = useState();
+
+  const location = useLocation();
 
   useEffect(() => {
     async function getQuiz() {
@@ -19,7 +21,7 @@ export default function QuizDetails() {
 
   return (
     <div>
-      QuizDetails id: {params.quizId}
+      <Link to={location?.state?.from ?? '/quizzes'}>Back to quizzes</Link>
       {quiz && (
         <>
           <p>Topic: {quiz.topic}</p>

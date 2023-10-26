@@ -5,28 +5,16 @@ import { fetchQuiz, deleteQuiz } from 'api';
 import { ErrMessage } from 'components/ErrMessage';
 import { ProgressBar } from 'react-loader-spinner';
 import toast from 'react-hot-toast';
-
-const getInitialFilters = () => {
-  const savedFilters = localStorage.getItem('quiz-filters');
-  if (savedFilters !== null) {
-    return JSON.parse(savedFilters);
-  }
-  return {
-    topic: '',
-    level: 'all',
-  };
-};
+import { useSearchParams } from 'react-router-dom';
 
 export default function QuizzesPage() {
   const [quizItems, setQuizItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [filters, setFilters] = useState(getInitialFilters);
 
-  useEffect(
-    () => localStorage.setItem('quiz-filters', JSON.stringify(filters)),
-    [filters]
-  );
+  const [params] = useSearchParams();
+  const topic = params.get('topic') ?? '';
+  const level = params.get('level') ?? 'all';
 
   useEffect(() => {
     async function getQuizzes() {
@@ -63,35 +51,31 @@ export default function QuizzesPage() {
     }
   };
 
-  const changeFilter = (key, value) => {
-    setFilters(prevState => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
+  // const changeFilter = (key, value) => {
+  //   setFilters(prevState => ({
+  //     ...prevState,
+  //     [key]: value,
+  //   }));
+  // };
 
-  const resetFilters = () => {
-    setFilters({ topic: '', level: 'all' });
-  };
+  // const resetFilters = () => {
+  //   setFilters({ topic: '', level: 'all' });
+  // };
 
   const visibleItems = quizItems.filter(quiz => {
-    const topicFilter = filters.topic.toLowerCase();
+    const topicFilter = topic.toLowerCase();
     const hasTopic = quiz.topic.toLowerCase().includes(topicFilter);
 
-    if (filters.level === 'all') {
+    if (level === 'all') {
       return hasTopic;
     }
 
-    return hasTopic && quiz.level === filters.level;
+    return hasTopic && quiz.level === level;
   });
 
   return (
     <main>
-      <SearchBar
-        filters={filters}
-        onChangeFilter={changeFilter}
-        onReset={resetFilters}
-      />
+      <SearchBar />
 
       {error && (
         <ErrMessage>

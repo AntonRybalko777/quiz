@@ -4,9 +4,9 @@ import { QuizForm } from 'components/QuizForm/QuizForm';
 import { ErrMessage } from 'components/ErrMessage';
 import { ProgressBar } from 'react-loader-spinner';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 export default function CreateQuiz() {
-  const [quizItems, setQuizItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -25,6 +25,7 @@ export default function CreateQuiz() {
 
   return (
     <div>
+      <Link to="/quizzes">Back to quizzes</Link>
       <QuizForm onAdd={addQuiz} />
       {error && (
         <ErrMessage>
